@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ServerStarter {
+public class ServerManager {
     private static HttpServer httpServer;
 
     public static void startServer(int port) throws IOException {

@@ -13,12 +13,12 @@ public class HttpProxyFactoryTest {
 
     @BeforeClass
     public static void setUp() throws IOException {
-       ServerStarter.startServer(port);
+       ServerManager.startServer(port);
     }
 
     @AfterClass
     public static void tearDown() {
-        ServerStarter.stopServer();
+        ServerManager.stopServer();
     }
 
     @Test

@@ -13,5 +13,4 @@ public class HttpProxyFactory {
                 new RemoteInvocationInterceptor(remoteInvocationExecutor)
         );
     }
-
 }

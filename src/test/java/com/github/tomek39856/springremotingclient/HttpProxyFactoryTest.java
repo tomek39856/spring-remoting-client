@@ -6,10 +6,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.HashMap;
 
 public class HttpProxyFactoryTest {
-    private static int port = 1488;
+    private static int port = 9988;
 
     @BeforeClass
     public static void setUp() throws IOException {
@@ -24,8 +23,8 @@ public class HttpProxyFactoryTest {
     @Test
     public void shouldBuildEchoServiceClientThatCallsSpringRemotingServiceAndDeserializeResponse() throws Exception {
         //given:
-        TestService testInterface = new HttpProxyFactory()
-                .buildProxy(TestService.class, "http://localhost:" + port + "/test", new HashMap<>());
+        TestService testInterface = new HttpProxyFactory<>(TestService.class, "http://localhost:" + port + "/test")
+                .buildProxy();
 
         //when:
         String response = testInterface.echo("test");

@@ -5,15 +5,15 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Map;
+import java.util.Optional;
 
 class RemoteInvocationExecutor {
     private final String remoteServiceAddress;
-    private final Map<String, String> requestProperties;
+    private final Optional<RequestPropertiesProvider> basicAuthCredentialsProvider;
 
-    RemoteInvocationExecutor(String url, Map<String, String> requestProperties) {
+    RemoteInvocationExecutor(String url, Optional<RequestPropertiesProvider> basicAuthCredentialsProvider) {
         this.remoteServiceAddress = url;
-        this.requestProperties = requestProperties;
+        this.basicAuthCredentialsProvider = basicAuthCredentialsProvider;
     }
 
     RemoteInvocationResult invoke(RemoteInvocation remoteInvocation) throws IOException, ClassNotFoundException {
@@ -35,10 +35,16 @@ class RemoteInvocationExecutor {
         URL url = new URL(remoteServiceAddress);
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
         httpURLConnection.addRequestProperty("Content-Type", " application/x-java-serialized-object");
-        requestProperties.forEach((key, value) -> {httpURLConnection.addRequestProperty(key, value);});
+        addCustomRequestProperties(httpURLConnection);
         httpURLConnection.setDoOutput(true);
         httpURLConnection.setRequestMethod("POST");
 
         return httpURLConnection;
+    }
+
+    private void addCustomRequestProperties(HttpURLConnection httpURLConnection) {
+        basicAuthCredentialsProvider.ifPresent((properties) -> {
+            properties.getRequestProperties().forEach(httpURLConnection::addRequestProperty);
+        });
     }
 }
